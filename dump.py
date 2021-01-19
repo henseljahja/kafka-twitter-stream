@@ -5,7 +5,7 @@ db = mysql.connect(
     host = 'localhost',
     user = 'root',
     passwd = '',
-    database = "steam"
+    database = "<your topic_name>"
 )
 
 cursor = db.cursor()
@@ -18,4 +18,4 @@ dataBase = cursor.execute(select)
 records = cursor.fetchall()
 dfData = pd.DataFrame(records)
 
-dfData.to_csv("dump_twitter.csv", header=["User_ID", "Steam", "Timestamp"], index=False)
+dfData.to_csv("<your file name>.csv", header=["User_ID", "Steam", "Timestamp"], index=False)
