@@ -6,10 +6,10 @@ from kafka import KafkaConsumer, consumer
 import re
 import time
 
-#ETL Proses
+#The ETL Process 
 def etl_proses():
     customer = KafkaConsumer(bootstrap_servers = ['localhost:9092'], api_version=(0,10))
-    customer.subscribe('steam')
+    customer.subscribe('<your topic_name>')
 
     tweet = []
     max = 0
@@ -22,14 +22,14 @@ def etl_proses():
         print("Read ",max, " tweet")
 
     cleansing = [re.sub("b'","", str(i.value)) for i in tweet]
-    kumpulan_tweet = [i.split('~') for i in cleansing]
+    tweets = [i.split('~') for i in cleansing]
 
     #schema
     engine = create_engine('mysql+mysqlconnector://root:@localhost/steam')
     Base = declarative_base()
 
     class Users (Base):
-        __tablename__ = "steam"
+        __tablename__ = "<your topic_name>"
         index = Column(Integer, primary_key = True)
         ids = Column(String(1000))
         tweet = Column(String(1000))
@@ -40,7 +40,7 @@ def etl_proses():
     #Transform
     tweet = []
     index = 0
-    for i in kumpulan_tweet:
+    for i in tweets:
         row = {}
         row['index'] = index
         row['ids'] = i[0]
@@ -52,8 +52,8 @@ def etl_proses():
     Session = sessionmaker(bind = engine)
     session = Session()
 
-    for cuitan in tweet:
-        row = Users(**cuitan)
+    for index in tweet:
+        row = Users(**index)
         session.add(row)
 
     session.commit()
