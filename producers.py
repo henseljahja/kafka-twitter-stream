@@ -3,28 +3,32 @@ import time
 from datetime import timedelta
 from kafka import KafkaConsumer, KafkaProducer, consumer
 
-#twitter setup
-consumer_key = "57UfXTOkbyTwgSLw6BTAjinag"
-consumer_secret = "f3JwlqA7etSNgFAUe5FWoX4sx85YKwazHusZlS6eGMU6jfqsvr"
-access_token = "1264503941061988352-niF9CQvaB46c2p14YfIn1q346fkXQW"
-access_token_secret = "4KwPkRTbiwVdSTHGSwCOMBlZtYJPSDYsxcNbGD3xpNeXt"
+consumer_key = "<Your Consumer Keys>"
+consumer_secret = "<Your secret consumer keys>"
+access_token = "<Your access token>"
+access_token_secret = "<Your secret access token>"
 
 #creating the authenctication object
+#Creating the authentication
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 
-#setting access token
+#Setting the access token
 auth.set_access_token(access_token, access_token_secret)
 
+#Setup the API with the authentication
 api = tweepy.API(auth)
-
+#Importing datetime for the data stream
 from datetime import datetime
-
+#Normalizing the incoming datatime
 def normalize_timestamp(time):
     mytime = datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
     return (mytime.strftime("%Y-%m-%d %H:%M:%S"))
-
+#setup the producers, to the local host that has been defined in the kafka consumer
 producer = KafkaProducer(bootstrap_servers = 'localhost:9092')
-topic_name = 'steam'
+#the topic name that has been setup from the shell
+#kafka-topics.bat --zookeeper localhost:2181 --create –topic <topic_name> --partitions <Number of Partitions> --replication-factor 1
+
+topic_name = '<topic_name>'
 
 #get Data
 def get_twitter_data():
@@ -41,7 +45,7 @@ def get_twitter_data():
         print("get ", count, " tweet")
         producer.send(topic_name, str.encode(record))
         count += 1
-
+#Counting the interval from which you stream the data
 def periodic_work(interval):
     while True:
         get_twitter_data()
