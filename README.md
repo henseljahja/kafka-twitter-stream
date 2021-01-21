@@ -17,9 +17,9 @@ Full explanation how to stream twitter data by keyword, using kafka and python o
   ```kafka-server-start.bat config\server.properties```
   3. Create kafka topics by typing
    ```kafka-topics.bat --zookeeper localhost:2181 --create –topic <topic_name> --partitions <numbers_of_partition> --replication-factor 3```
-  4. Run producers.py
+  4. Run 
   ```python producers.py```
-  5. Run consumers.py
+  5. Run 
   ```python consumers.py```
-  6. Check MySql database, if enough data is collected, dump the etl by running dump.py
+  6. Check MySql database, if enough data is collected, dump the etl by running
   ```python dump.py```
